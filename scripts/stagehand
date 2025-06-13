@@ -1,0 +1,107 @@
+#!/bin/bash
+
+STAGEHAND_DIR="$HOME/.stagehand"
+PRESET_DIR="$STAGEHAND_DIR/presets"
+HANDLER_DIR="$STAGEHAND_DIR/handlers"
+VERSION="0.1.0"
+
+mkdir -p "$PRESET_DIR" "$HANDLER_DIR"
+
+log() {
+  echo "📣 $1"
+}
+
+usage() {
+  cat <<EOF
+StageHand CLI v$VERSION
+
+Usage:
+  stagehand add <name>      Add a new preset
+  stagehand list            List all presets
+  stagehand run <name>      Run a preset
+  stagehand help            Show this help message
+  stagehand run <name> [connect|disconnect]  Run a preset
+EOF
+}
+
+add_preset() {
+  local name="$1"
+
+  if [[ ! "$name" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+    log "❌ Invalid preset name: only alphanumeric, dot, underscore, and dash allowed."
+    exit 1
+  fi
+
+  local on_path="$PRESET_DIR/$name/connect.sh"
+  local off_path="$PRESET_DIR/$name/disconnect.sh"
+
+  if [[ -f "$on_path" || -f "$off_path" ]]; then
+    log "Preset '$name' already exists."
+    exit 1
+  fi
+
+  cat <<EOF >"$on_path"
+#!/bin/bash
+# actions to run when display connects
+echo "[on] Preset: $name triggered."
+EOF
+  cat <<EOF >"$off_path"
+#!/bin/bash
+# actions to run when display disconnects
+echo "[off] Preset: $name triggered."
+EOF
+
+  chmod +x "$on_path" "$off_path"
+  log "Preset '$name' created at:"
+  log "  ON : $on_path"
+  log "  OFF: $off_path"
+}
+
+list_presets() {
+  for dir in "$PRESET_DIR"/*; do
+    [[ -d "$dir" ]] || continue
+    preset="$(basename "$dir")"
+    [[ -f "$dir/connect.sh" ]] && c="✅" || c="—"
+    [[ -f "$dir/disconnect.sh" ]] && d="✅" || d="—"
+    printf "📦 %-20s | connect: %s | disconnect: %s\n" "$preset" "$c" "$d"
+  done | sort
+}
+
+run_preset() {
+  local name="$1"
+  local action="${2:-connect}"
+  local script="$PRESET_DIR/$name/${action}.sh"
+
+  if [[ -x "$script" ]]; then
+    bash "$script"
+  else
+    log "⚠️  No executable '$action.sh' found for preset '$name'."
+    exit 1
+  fi
+}
+
+case "$1" in
+  add)
+    [[ -z "$2" ]] && usage && exit 1
+    add_preset "$2"
+    ;;
+  list)
+    list_presets
+    ;;
+  run)
+    [[ -z "$2" ]] && usage && exit 1
+    run_preset "$2" "$3"
+    ;;  
+  help|--help|-h)
+    usage
+    ;;
+  --version)
+    echo "StageHand v$VERSION"
+    exit 0
+    ;;
+  *)
+    log "❌ Unknown command: '$1'"
+    usage
+    exit 1
+    ;;
+  esac

@@ -12,9 +12,12 @@ if ! command -v displayplacer >/dev/null 2>&1; then
 fi
 
 # Paths
+LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
+mkdir -p "$LAUNCH_AGENTS"
+
 INSTALL_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLIST_SRC="$INSTALL_DIR/launchd/com.mousetraptech.stagehand.plist"
-PLIST_DEST="$HOME/Library/LaunchAgents/com.mousetraptech.stagehand.plist"
+PLIST_DEST="$LAUNCH_AGENTS/com.mousetraptech.stagehand.plist"
 STAGEHAND_DIR="$HOME/.stagehand"
 DISPLAY_ID_FILE="$STAGEHAND_DIR/display_id"
 
@@ -34,8 +37,13 @@ echo "$EXT_ID" > "$DISPLAY_ID_FILE"
 log "🧬 Saved external display ID: $EXT_ID"
 
 # Make scripts executable
-chmod +x "$INSTALL_DIR"/scripts/*.sh "$INSTALL_DIR"/handlers/*.sh 2>/dev/null || log "No scripts found to chmod"
+chmod +x "$INSTALL_DIR"/scripts/*.sh "$INSTALL_DIR"/scripts/stagehand "$INSTALL_DIR"/handlers/*.sh 2>/dev/null || log "No scripts found to chmod"
 log "🔐 Scripts made executable."
+
+mkdir -p ~/bin
+cp scripts/stagehand ~/bin/
+export PATH="$HOME/bin:$PATH"
+log "📎 CLI script linked to ~/bin/stagehand"
 
 # Copy and update LaunchAgent
 cp "$PLIST_SRC" "$PLIST_DEST"

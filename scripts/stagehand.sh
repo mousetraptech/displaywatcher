@@ -3,6 +3,8 @@
 set -e
 
 STAGEHAND_DIR="$HOME/.stagehand"
+mkdir -p "$STAGEHAND_DIR/presets"
+
 DISPLAY_ID_FILE="$STAGEHAND_DIR/display_id"
 STATE_FILE="$STAGEHAND_DIR/state"
 HANDLER_DIR="$(cd "$(dirname "$0")/../handlers" && pwd)"
