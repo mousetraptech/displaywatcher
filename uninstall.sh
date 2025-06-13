@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PLIST_PATH="$HOME/Library/LaunchAgents/com.mousetraptech.stagehand.plist"
 
