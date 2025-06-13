@@ -1,0 +1,47 @@
+# macOS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS-specific cache files
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+
+# Logs and temporary files
+*.log
+*.swp
+*.tmp
+*.bak
+*.old
+*~
+
+# IDE/editor noise
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Build artifacts and archives
+*.zip
+*.tar.gz
+*.icns
+*.pkg
+
+# Git/Release backups
+*.DS_Store
+stagehand_git.zip
+stagehand.zip
+*.bak
+.release/
+
+# Optional: exclude local LaunchAgents during dev
+~/Library/LaunchAgents/com.mousetraptech.stagehand.plist
+
+# Optional: exclude shell history or test output
+*.sh.out
+*.sh.err
+.history
