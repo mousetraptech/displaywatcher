@@ -66,6 +66,8 @@ These are plain Bash scripts. Do whatever you want:
 - Log timestamps
 - Trigger AppleScripts, CLI tools, or Home Assistant automations
 
+[Customizing Hooks](docs/customizing-hooks.md)
+
 ---
 
 ## ✅ Testing
