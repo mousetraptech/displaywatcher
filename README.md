@@ -1,64 +1,76 @@
-# StageHand
+# 🎭 StageHand
 
-A minimalist macOS utility to run custom scripts when an external display (like an Apple TV) connects or disconnects.
+**StageHand** is a tiny macOS utility that listens for changes in external display state—like when your Mac loses or regains an extended monitor—and responds by executing customizable scripts.
 
-### Why this exists
-If you're frequently using external displays and want automated handling—like pausing media, switching audio, or triggering notifications—StageHand handles it cleanly and transparently.
+Perfect for setups with an Apple TV, external monitor, or presentation rig that need to pause music, mute speakers, or trigger automations when your screen layout shifts.
 
 ---
 
-## Installation
+## 🤔 Why this exists
 
-1. Install **displayplacer**:
+If you're frequently using external displays and want your Mac to just handle things—StageHand runs in the background and does exactly what you tell it to. No fluff. No GUI. Just response.
+
+---
+
+## 🧠 Why “StageHand”?
+
+Because it works behind the scenes—silent, reliable, and ready to manage cues when the show changes. It’s the tech you forget you installed… until it saves your ass.
+
+---
+
+## 📦 Installation
+
+1. Install `displayplacer` (required):
 
     ```bash
     brew install displayplacer
     ```
 
-2. Clone/display the project:
+2. Clone the repo:
 
     ```bash
     git clone https://github.com/mousetraptech/stagehand.git
     cd stagehand
     ```
 
-3. Make scripts executable:
+3. Run the installer:
 
     ```bash
-    chmod +x scripts/stagehand.sh handlers/*.sh
+    sh ./install.sh
     ```
 
-4. Find your external display ID:
+4. On startup, StageHand will:
+    - Detect your current external display
+    - Set up a LaunchAgent to run at login
+    - Monitor for connect/disconnect events
+    - Trigger handler scripts accordingly
+
+5. (Optional) Verify it’s running:
 
     ```bash
-    displayplacer list
+    launchctl list | grep mousetraptech
     ```
-
-   Copy the `Persistent screen id:` for your external monitor and paste it into `scripts/stagehand.sh`, replacing `YOUR_EXTERNAL_DISPLAY_ID_HERE` on the `EXT_ID` line.
-
-5. Install the LaunchAgent:
-
-    ```bash
-    cp LaunchAgents/com.mousetraptech.stagehand.plist ~/Library/LaunchAgents/
-    launchctl load ~/Library/LaunchAgents/com.mousetraptech.stagehand.plist
-    ```
-
-   It will run automatically at login and monitor display status every 5 seconds by default.
 
 ---
 
-## Handlers
+## 🧬 Customization
 
-- `handlers/on_connect.sh` — runs when the external display is connected.
-- `handlers/on_disconnect.sh` — runs when it’s disconnected.
+Edit the handler scripts in:
 
-You can customize these to do anything: pause or mute audio, show notifications, toggle IoT devices, etc.
+- `handlers/on_connect.sh`
+- `handlers/on_disconnect.sh`
+
+These are plain Bash scripts. Do whatever you want:
+- Pause/resume Spotify
+- Mute/unmute speakers
+- Log timestamps
+- Trigger AppleScripts, CLI tools, or Home Assistant automations
 
 ---
 
-## Testing
+## ✅ Testing
 
-To test handler scripts manually:
+To manually trigger the handlers:
 
 ```bash
 bash handlers/on_disconnect.sh
@@ -67,23 +79,32 @@ bash handlers/on_connect.sh
 
 ---
 
-## Configuration
+## 🎛️ Configuration
 
-- Modify the polling interval in `scripts/stagehand.sh` (`CHECK_INTERVAL=5`).
-- You can also disable the LaunchAgent via:
+- To adjust the polling interval, edit this line in `scripts/stagehand.sh`:
+
+    ```bash
+    CHECK_INTERVAL=5
+    ```
+
+- To temporarily disable StageHand:
+
+    ```bash
+    launchctl unload ~/Library/LaunchAgents/com.mousetraptech.stagehand.plist
+    ```
+
+---
+
+## 🗑️ Uninstall
 
 ```bash
-launchctl unload ~/Library/LaunchAgents/com.mousetraptech.stagehand.plist
+sh ./uninstall.sh
 ```
 
----
-
-## License
-
-This project is released under the MIT License — see LICENSE.
+Removes the LaunchAgent and stops monitoring.
 
 ---
 
-## Version
+## 📄 License
 
-StageHand `1.0.0`
+MIT. Use it, fork it, break it, improve it.
