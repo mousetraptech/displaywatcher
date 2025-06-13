@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PLIST_PATH="$HOME/Library/LaunchAgents/com.mousetraptech.displaywatcher.plist"
+PLIST_PATH="$HOME/Library/LaunchAgents/com.mousetraptech.stagehand.plist"
 
 echo "Unloading LaunchAgent..."
 launchctl unload "$PLIST_PATH" 2>/dev/null
@@ -8,10 +8,10 @@ launchctl unload "$PLIST_PATH" 2>/dev/null
 echo "Removing LaunchAgent plist..."
 rm -f "$PLIST_PATH"
 
-echo "Removing displaywatcher state and log files..."
-rm -f "$HOME/.displaywatcher_state"
+echo "Removing stagehand state and log files..."
+rm -f "$HOME/.stagehand_state"
 rm -f "$HOME/.pauseaudio.log"
-rm -f /tmp/displaywatcher.out
-rm -f /tmp/displaywatcher.err
+rm -f /tmp/stagehand.out
+rm -f /tmp/stagehand.err
 
-echo "✅ DisplayWatcher uninstalled."
+echo "✅ StageHand uninstalled."

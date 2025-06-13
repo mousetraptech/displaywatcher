@@ -5,7 +5,7 @@ CHECK_INTERVAL=5
 
 while true; do
   CONNECTED=$(displayplacer list | grep -c "$EXT_ID")
-  STATE_FILE="$HOME/.displaywatcher_state"
+  STATE_FILE="$HOME/.stagehand_state"
 
   LAST_STATE="$(cat "$STATE_FILE" 2>/dev/null || echo "unknown")"
 
